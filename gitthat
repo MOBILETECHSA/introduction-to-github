@@ -1,0 +1,81 @@
+import openpyxl
+from openpyxl import Workbook
+from openpyxl.styles import Font, PatternFill
+
+# Create workbook and sheets
+wb = Workbook()
+ws1 = wb.active
+ws1.title = "Accounts Overview"
+ws2 = wb.create_sheet("Monthly Budget")
+ws3 = wb.create_sheet("Transactions")
+ws4 = wb.create_sheet("Recurring Bills")
+
+# -------------------------
+# Sheet 1: Accounts Overview
+# -------------------------
+headers1 = ["Account Name", "Type", "Institution", "Account # (last 4)", "Balance", "Due Date / Renewal", "Notes"]
+ws1.append(headers1)
+
+# Add example rows
+ws1.append(["Checking", "Bank", "Chase", "1234", "=SUMIF(Transactions!B:B, A2, Transactions!E:E)", "", "Main account"])
+ws1.append(["Credit Card", "Credit", "Capital One", "5678", "=SUMIF(Transactions!B:B, A3, Transactions!E:E)", "15th", "Pay off monthly"])
+
+# Format headers
+for cell in ws1[1]:
+    cell.font = Font(bold=True)
+    cell.fill = PatternFill(start_color="FFD966", end_color="FFD966", fill_type="solid")
+
+# -------------------------
+# Sheet 2: Monthly Budget
+# -------------------------
+headers2 = ["Category", "Budgeted", "Actual", "Difference", "Notes"]
+ws2.append(headers2)
+
+# Example rows with formulas
+ws2.append(["Income", 3000, "=SUMIF(Transactions!C:C, A2, Transactions!E:E)", "=C2-B2", "Salary + bonus"])
+ws2.append(["Rent/Mortgage", 1000, "=SUMIF(Transactions!C:C, A3, Transactions!E:E)", "=C3-B2", "Fixed expense"])
+ws2.append(["Utilities", 250, "=SUMIF(Transactions!C:C, A4, Transactions!E:E)", "=C4-B4", "Electric/Water"])
+ws2.append(["Subscriptions", 75, "=SUMIF(Transactions!C:C, A5, Transactions!E:E)", "=C5-B5", "Netflix/Spotify"])
+
+# Format headers
+for cell in ws2[1]:
+    cell.font = Font(bold=True)
+    cell.fill = PatternFill(start_color="C9DAF8", end_color="C9DAF8", fill_type="solid")
+
+# -------------------------
+# Sheet 3: Transactions Log
+# -------------------------
+headers3 = ["Date", "Account", "Category", "Description", "Amount", "Type (In/Out)", "Balance"]
+ws3.append(headers3)
+
+# Example rows
+ws3.append(["2025-08-01", "Checking", "Income", "Paycheck", 1500, "In", "=SUM($E$2:E2)"])
+ws3.append(["2025-08-02", "Checking", "Utilities", "CPS Energy", -120, "Out", "=SUM($E$2:E3)"])
+ws3.append(["2025-08-03", "Credit Card", "Subscriptions", "Netflix", -15, "Out", "=SUM($E$2:E4)"])
+
+# Format headers
+for cell in ws3[1]:
+    cell.font = Font(bold=True)
+    cell.fill = PatternFill(start_color="D9EAD3", end_color="D9EAD3", fill_type="solid")
+
+# -------------------------
+# Sheet 4: Recurring Bills
+# -------------------------
+headers4 = ["Bill/Service", "Amount", "Frequency", "Due Date", "AutoPay? (Y/N)", "Paid (Y/N)", "Notes"]
+ws4.append(headers4)
+
+# Example rows
+ws4.append(["Rent", 1000, "Monthly", "2025-09-01", "N", "Y", "Paid via Zelle"])
+ws4.append(["Car Insurance", 120, "Monthly", "2025-09-10", "Y", "N", "Progressive"])
+ws4.append(["Netflix", 15, "Monthly", "2025-09-05", "Y", "N", "Credit Card"])
+
+# Format headers
+for cell in ws4[1]:
+    cell.font = Font(bold=True)
+    cell.fill = PatternFill(start_color="F4CCCC", end_color="F4CCCC", fill_type="solid")
+
+# Save file
+file_path = "/mnt/data/Account_Budget_Manager.xlsx"
+wb.save(file_path)
+
+file_path
